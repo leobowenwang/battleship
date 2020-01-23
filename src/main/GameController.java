@@ -1,7 +1,6 @@
 package main;
 
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -68,7 +67,9 @@ public class GameController
                 map_attack.newShip(getRandomNumberInts(0, 9), getRandomNumberInts(0, 9), getRandomNumberInts(0, 9), getRandomNumberInts(0, 9));
             }
         }
-        log1.setText("Place a " + map_player.ships[map_player.currentship] + " long ship.");
+
+            log1.setText("Place a " + map_player.ships[map_player.currentship] + " long ship.");
+
     }
 
     void checkIfWon(){ //method gets called in onMouseClickAttack
@@ -96,6 +97,7 @@ public class GameController
 
             if (event.getButton() == MouseButton.PRIMARY)
             {
+
                 if (map_attack.tiles[row][col].isShip) //Left Click on enemy map - if is Ship load image & mark it
                 {
                     map_attack.tiles[row][col].update("hit");
@@ -108,9 +110,9 @@ public class GameController
                 else
                 {
                     map_attack.tiles[row][col].update("splash"); // if its not a ship - load image & can be improved by another variable
-                }
-                checkIfWon();
-                if (!isMultiplayer) // bot logic
+            }
+            checkIfWon();
+                if (!isMultiplayer && map_player.shipPoints == 0) // bot logic
                 {
                     do
                     {
@@ -162,29 +164,16 @@ public class GameController
                     pos2col = col;
                     map_player.newShip(pos1row, pos1col, pos2row, pos2col);
                     isPos1 = true;
-                    log1.setText("Place a " + map_player.ships[map_player.currentship] + " long ship.");
+                    if (map_player.currentship == 10) {
+                        log1.setText("Press Ready!");
+                    }else {
+                        log1.setText("Place a " + map_player.ships[map_player.currentship] + " long ship.");
+                    }
                 }
             }
         }
-        else
-        {
-            log1.setText("Press ready!");
-        }
-
     }
 
-
-    public void onClickReady()
-    {
-        if (map_player.shipPoints == 0)
-        {
-            isReady = true;
-        }
-        else
-        {
-            alert("You need to place " + map_player.shipPoints + " more ship tile(s)");
-        }
-    }
 
     private int getRandomNumberInts(int min, int max) // from minesweeper
     {
@@ -201,7 +190,20 @@ public class GameController
         alert.showAndWait();
     }
 
-    public void help(ActionEvent actionEvent)
+    public void onClickReady()
+    {
+        if (map_player.shipPoints == 0)
+        {
+            alert("You can start now by clicking on the right field!");
+            isReady = true;
+        }
+        else
+        {
+            alert("You need to place " + map_player.shipPoints + " more ship tile(s)");
+        }
+    }
+
+    public void help()
     {
         alert("Place your ships by clicking 2 tiles. Diagonal ships and ships shorter than 2 and longer than 5 tiles are not allowed. Press ready when you have placed 30 tiles.");
     }
